@@ -48,6 +48,10 @@ API_VERSION = prefect.__version__
 SERVER_API_VERSION = "0.8.4"
 ORION_API_VERSION = SERVER_API_VERSION  # Deprecated. Available for compatibility.
 
+ROOT_PATH = os.environ.get("PREFECT_ROOT_PATH", "")
+if ROOT_PATH.endswith("/"):
+    ROOT_PATH = ROOT_PATH[:-1]
+
 logger = get_logger("server")
 
 enforce_minimum_version = EnforceMinimumAPIVersion(
@@ -543,8 +547,8 @@ def create_app(
         ),
         name="static",
     )
-    app.mount("/api", app=api_app, name="api")
-    app.mount("/", app=ui_app, name="ui")
+    app.mount(f"{ROOT_PATH}/api", app=api_app, name="api")
+    app.mount(f"{ROOT_PATH}/", app=ui_app, name="ui")
 
     def openapi():
         """
