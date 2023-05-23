@@ -11,10 +11,10 @@ export type Settings = {
 }
 
 async function getUserConfig(): Promise<UserConfig> {
-  const baseUrl = MODE() === 'development' ? 'http://127.0.0.1:4288/aa/prefect' : BASE_URL() ?? window.location.origin
+  const baseUrl = BASE_URL() ?? window.location.origin
 
-  var rst: UserConfig = {serverUrlPrefix: baseUrl}
-  await axios.get<UserConfig>('/config.json').then(res => {
+  var rst: UserConfig = { serverUrlPrefix: baseUrl} 
+  await axios.get<UserConfig>('/config.json', {baseURL: baseUrl}).then(res => {
     rst = res.data
   }).catch(err => {
     console.log(':: >>> Error while getting user configs', err)
