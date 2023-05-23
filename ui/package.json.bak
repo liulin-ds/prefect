@@ -3,8 +3,8 @@
   "version": "2.8.0",
   "private": true,
   "scripts": {
-    "serve": "npx vite --host",
-    "build": "npx vite build",
+    "serve": "vite --host",
+    "build": "vite build",
     "lint": "eslint src --ext .js,.ts,.vue",
     "lint:fix": "eslint src --fix --debug",
     "test": "playwright test",
@@ -13,14 +13,13 @@
   "dependencies": {
     "@prefecthq/graphs": "^1.0.7",
     "@prefecthq/prefect-design": "1.8.1",
-    "@prefecthq/prefect-ui-library": "file:../../prefect-ui-library",
+    "@prefecthq/prefect-ui-library": "1.6.6",
     "@prefecthq/vue-charts": "1.0.0",
     "@prefecthq/vue-compositions": "1.4.3",
     "@types/lodash.debounce": "4.0.7",
     "axios": "0.27.2",
     "lodash.debounce": "4.0.8",
     "tailwindcss": "3.3.1",
-    "vee-validate": "^4.9.4",
     "vue": "3.2.47",
     "vue-router": "4.1.6"
   },

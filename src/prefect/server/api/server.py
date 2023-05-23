@@ -5,6 +5,7 @@ Defines the Prefect REST API FastAPI app.
 import asyncio
 import mimetypes
 import os
+from getpass import getuser
 from contextlib import asynccontextmanager
 from functools import partial, wraps
 from hashlib import sha256
@@ -52,6 +53,7 @@ ROOT_PATH = os.environ.get("PREFECT_ROOT_PATH", "")
 if ROOT_PATH.endswith("/"):
     ROOT_PATH = ROOT_PATH[:-1]
 
+print(f"The server will be started at base url: {ROOT_PATH}")
 logger = get_logger("server")
 
 enforce_minimum_version = EnforceMinimumAPIVersion(
@@ -284,7 +286,14 @@ def create_ui_app(ephemeral: bool) -> FastAPI:
         mimetypes.add_type("application/javascript", ".js")
 
     @ui_app.get("/ui-settings")
-    def ui_settings():
+    def ui_settings(request: Request):
+        # TODO: add light function for user verification
+        user_in_cookie = request.cookies.get("user", "")
+        msg = f"Current server is started by [{getuser()}], and visited by [{user_in_cookie}]"
+        print(msg)
+        if getuser().lower() != user_in_cookie.lower():
+            # add logic here
+            pass
         return {
             "api_url": prefect.settings.PREFECT_UI_API_URL.value(),
             "flags": enabled_experiments(),

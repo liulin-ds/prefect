@@ -5,7 +5,10 @@ import { defineConfig } from 'vite'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue()],
-  base: process.env.PREFECT_UI_SERVE_BASE ?? '',
+  base: process.env.PREFECT_UI_SERVE_BASE ?? '',  
+  server: {    
+    fs: { strict: false },
+  },
   resolve: {
     alias: [{ find: '@', replacement: resolve(__dirname, './src') }],
     dedupe: ['vue', 'vue-router'],

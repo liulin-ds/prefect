@@ -33,3 +33,18 @@ graft src/prefect/server/database/sql
 # Package files and data
 graft src/prefect/server/ui
 graft src/prefect/server/api/static
+
+# Exclude
+prune .circleci
+prune .github
+prune benches
+prune docs
+prune flows
+prune netlify
+prune scripts
+prune ui
+prune tests/*
+
+exclude .*
+exclude Dockerfile docker-compose.yml mkdocs.insiders.yml mkdocs.yml netlify.toml RELEASE-NOTES.md runtime.txt
+exclude src/debug-it.py
