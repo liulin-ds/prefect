@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { mapper } from '@/services/mapper'
-import { SettingsResponse } from '@/types/settingsResponse'
+import { SettingsResponse, UserConfig } from '@/types/settingsResponse'
 import { MODE, BASE_URL } from '@/utilities/meta'
 import { FeatureFlag } from '@/utilities/permissions'
 
@@ -10,11 +10,23 @@ export type Settings = {
   user?: string,
 }
 
+async function getUserConfig(): Promise<UserConfig> {
+  const baseUrl = MODE() === 'development' ? 'http://127.0.0.1:4288/aa/prefect' : BASE_URL() ?? window.location.origin
+
+  var rst: UserConfig = {serverUrlPrefix: baseUrl}
+  await axios.get<UserConfig>('/config.json').then(res => {
+    rst = res.data
+  }).catch(err => {
+    console.log(':: >>> Error while getting user configs', err)
+  })
+  return rst
+}
+
+
 export class UiSettings {
   public static settings: Settings | null = null
 
   private static promise: Promise<Settings> | null = null
-  private static readonly baseUrl = MODE() === 'development' ? 'http://127.0.0.1:4288/aa/prefect' : BASE_URL() ?? window.location.origin
   public static async load(): Promise<Settings> {
     if (this.settings !== null) {
       return this.settings
@@ -23,10 +35,11 @@ export class UiSettings {
     if (this.promise !== null) {
       return this.promise
     }
-
+    const userConfig:UserConfig = await getUserConfig()
+    console.log(':: >>> Check user config:', userConfig)
     this.promise = new Promise(resolve => {
       return axios.get<SettingsResponse>('/ui-settings', {
-        baseURL: '/aa/prefect/svr',
+        baseURL: userConfig.serverUrlPrefix,
         params: {user: window.localStorage.getItem('prefect-user')}
       })
         .then(({ data }) => mapper.map('SettingsResponse', data, 'Settings'))
